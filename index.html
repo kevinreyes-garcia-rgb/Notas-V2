@@ -3,75 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NotsCreator PRO</title>
+    <title>NotsCreator Ultra - Black & Purple</title>
     <style>
         :root {
-            --bg: #0a0a0c;
-            --panel: #16161e;
-            --primary: #bb86fc; /* Morado Neón */
-            --secondary: #03dac6; /* Cian Neón */
-            --text: #e1e1e1;
+            --bg: #050505;
+            --panel: #121212;
+            --primary: #bc13fe; /* Morado Eléctrico */
+            --secondary: #00f2ff; /* Cian Neón */
+            --text: #ffffff;
+            --line-color: rgba(188, 19, 254, 0.4);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; touch-action: manipulation; }
 
         body {
-            font-family: 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
             background-color: var(--bg);
             color: var(--text);
-            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
         }
 
+        /* Header Estilo Cyberpunk */
         .header {
-            padding: 20px;
+            padding: 15px;
             text-align: center;
             background: var(--panel);
-            border-bottom: 2px solid var(--primary);
-            box-shadow: 0 0 20px rgba(187, 134, 252, 0.2);
+            border-bottom: 3px solid var(--primary);
+            box-shadow: 0 0 15px var(--primary);
         }
 
-        .header h1 { color: var(--primary); text-transform: uppercase; letter-spacing: 4px; }
+        .header h1 { 
+            font-size: 1.8rem; 
+            text-transform: uppercase; 
+            letter-spacing: 3px; 
+            color: var(--primary);
+            text-shadow: 0 0 10px var(--primary);
+        }
 
+        /* Selector de Instrumentos */
         .instrument-selector {
             display: flex;
             justify-content: center;
             gap: 10px;
-            padding: 20px;
-            flex-wrap: wrap;
+            padding: 15px;
+            background: #1a1a1a;
         }
 
         .inst-btn {
-            background: var(--panel);
-            border: 1px solid var(--primary);
+            background: transparent;
+            border: 2px solid var(--primary);
             color: var(--primary);
-            padding: 10px 20px;
-            border-radius: 5px;
+            padding: 8px 15px;
+            border-radius: 8px;
             cursor: pointer;
+            font-weight: bold;
             transition: 0.3s;
         }
 
         .inst-btn.active {
             background: var(--primary);
-            color: var(--bg);
-            box-shadow: 0 0 15px var(--primary);
+            color: white;
+            box-shadow: 0 0 20px var(--primary);
         }
 
-        .editor-container {
-            background: var(--panel);
-            margin: 20px;
-            border-radius: 10px;
-            padding: 40px 10px;
+        /* Área de Edición */
+        .editor-wrapper {
+            flex-grow: 1;
             overflow-x: auto;
-            position: relative;
-            border: 1px solid #333;
+            overflow-y: hidden;
+            padding: 40px 20px;
+            display: flex;
+            align-items: center;
         }
 
-        /* Contenedor de las líneas dinámicas */
-        #staff-lines {
+        #staff-container {
             position: relative;
-            min-width: 1500px;
-            height: 200px;
-            display: flex;
+            min-width: 2000px; /* Muy largo para poder componer */
+            height: 300px;
+            background: var(--panel);
+            border-radius: 15px;
+            border: 1px solid #333;
             cursor: crosshair;
         }
 
@@ -79,69 +92,154 @@
             position: absolute;
             width: 100%;
             height: 2px;
-            background: rgba(187, 134, 252, 0.3);
+            background: var(--line-color);
+            box-shadow: 0 0 5px var(--primary);
             pointer-events: none;
         }
 
+        /* Notas (Puntos) */
         .note-dot {
             position: absolute;
-            width: 18px;
-            height: 18px;
+            width: 24px;
+            height: 24px;
             background: var(--secondary);
             border-radius: 50%;
             transform: translate(-50%, -50%);
-            box-shadow: 0 0 10px var(--secondary);
-            z-index: 5;
+            box-shadow: 0 0 15px var(--secondary);
+            z-index: 10;
+            border: 2px solid white;
         }
 
-        .controls {
+        /* Controles Inferiores */
+        .bottom-bar {
+            padding: 20px;
+            background: var(--panel);
             display: flex;
             justify-content: center;
-            gap: 15px;
-            padding-bottom: 50px;
+            gap: 20px;
+            border-top: 1px solid #333;
         }
 
         .btn {
-            padding: 12px 25px;
-            border-radius: 30px;
+            padding: 15px 30px;
+            border-radius: 50px;
             border: none;
             font-weight: bold;
+            text-transform: uppercase;
             cursor: pointer;
+            font-size: 1rem;
         }
 
-        .btn-play { background: var(--secondary); color: var(--bg); }
-        .btn-clear { background: #cf6679; color: white; }
+        .btn-play { background: var(--secondary); color: #000; box-shadow: 0 0 10px var(--secondary); }
+        .btn-clear { background: #ff4b2b; color: white; }
 
-        @media (max-width: 768px) {
-            .header h1 { font-size: 1.5rem; }
-            .inst-btn { padding: 8px 12px; font-size: 0.8rem; }
-        }
     </style>
 </head>
 <body>
 
     <div class="header">
         <h1>NotsCreator PRO</h1>
-        <p>Mode: <span id="mode-indicator">PC/Android Ready</span></p>
     </div>
 
     <div class="instrument-selector">
-        <button class="inst-btn active" onclick="setInstrument('guitar')">🎸 GUITARRA (6)</button>
-        <button class="inst-btn" onclick="setInstrument('bass')">🎸 BAJO (4)</button>
-        <button class="inst-btn" onclick="setInstrument('piano')">🎹 PIANO (5)</button>
-        <button class="inst-btn" onclick="setInstrument('drums')">🥁 BATERÍA (4)</button>
+        <button class="inst-btn active" onclick="setInstrument('guitar', 6)">🎸 GUITARRA (6)</button>
+        <button class="inst-btn" onclick="setInstrument('bass', 4)">🎸 BAJO (4)</button>
+        <button class="inst-btn" onclick="setInstrument('piano', 5)">🎹 PIANO (5)</button>
+        <button class="inst-btn" onclick="setInstrument('drums', 4)">🥁 BATERÍA (4)</button>
     </div>
 
-    <div class="editor-container">
-        <div id="staff-lines">
+    <div class="editor-wrapper">
+        <div id="staff-container">
             </div>
     </div>
 
-    <div class="controls">
-        <button class="btn btn-clear" onclick="clearAll()">BORRAR TODO</button>
-        <button class="btn btn-play" onclick="play()">REPRODUCIR</button>
+    <div class="bottom-bar">
+        <button class="btn btn-clear" onclick="clearBoard()">LIMPIAR</button>
+        <button class="btn btn-play" onclick="playEffect()">REPRODUCIR</button>
     </div>
 
-    <script src="app.js"></script>
+    <script>
+        const container = document.getElementById('staff-container');
+        let currentLines = 6;
+
+        // Función para dibujar las líneas
+        function drawStaff(num) {
+            container.innerHTML = ''; // Limpiar todo
+            const height = container.clientHeight;
+            const spacing = height / (num + 1);
+
+            for (let i = 1; i <= num; i++) {
+                const line = document.createElement('div');
+                line.className = 'line';
+                line.style.top = (i * spacing) + 'px';
+                container.appendChild(line);
+            }
+        }
+
+        // Cambiar instrumento
+        function setInstrument(name, lines) {
+            currentLines = lines;
+            // Estilo de botones
+            document.querySelectorAll('.inst-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            drawStaff(lines);
+        }
+
+        // Colocar notas (PC y Android)
+        function placeNote(clientX, clientY) {
+            const rect = container.getBoundingClientRect();
+            const x = clientX - rect.left;
+            const y = clientY - rect.top;
+
+            // Magnetismo a la línea
+            const spacing = container.clientHeight / (currentLines + 1);
+            const closestLine = Math.round(y / spacing);
+            
+            if (closestLine > 0 && closestLine <= currentLines) {
+                const note = document.createElement('div');
+                note.className = 'note-dot';
+                note.style.left = x + 'px';
+                note.style.top = (closestLine * spacing) + 'px';
+                
+                // Borrar nota si se toca de nuevo
+                note.onclick = (e) => { e.stopPropagation(); note.remove(); };
+                
+                container.appendChild(note);
+                playTone(200 + (closestLine * 50));
+            }
+        }
+
+        // Eventos
+        container.addEventListener('mousedown', (e) => placeNote(e.clientX, e.clientY));
+        container.addEventListener('touchstart', (e) => {
+            const touch = e.touches[0];
+            placeNote(touch.clientX, touch.clientY);
+        });
+
+        function clearBoard() {
+            drawStaff(currentLines);
+        }
+
+        // Sonido de feedback
+        function playTone(freq) {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = ctx.createOscillator();
+            const g = ctx.createGain();
+            osc.frequency.value = freq;
+            osc.connect(g);
+            g.connect(ctx.destination);
+            g.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.4);
+            osc.start();
+            osc.stop(ctx.currentTime + 0.4);
+        }
+
+        function playEffect() {
+            alert("Reproduciendo tu creación...");
+        }
+
+        // Ejecutar al cargar la página
+        window.onload = () => drawStaff(6);
+    </script>
 </body>
 </html>
